@@ -1,55 +1,31 @@
-import os, time, sys, yt_dlp
+import customtkinter as ctk
+import os
+import sys
 
-def BANNER():
-    return("YOUTUBE DOWNLOADER")
+from src.ui_elements import *
 
-def download_audio(url, output_path="output"):
-    # Configurações do yt-dlp para áudio
-    ydl_opts = {
-        'format': 'bestaudio/best',  # Seleciona o melhor áudio disponível
-        'outtmpl': f'{output_path}/%(title)s.%(ext)s',  # Nome do arquivo de saída
-        'postprocessors': [{
-            'key': 'FFmpegExtractAudio',  # Extrai apenas o áudio
-            'preferredcodec': 'mp3',  # Converte para MP3
-            'preferredquality': '192',  # Qualidade (opcional, 192 kbps)
-        }],
-        'ffmpeg_location': r'bin/',  # Substitua pelo caminho da pasta 'bin' com ffmpeg.exe
-    }
-
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([url])
-
-def download_video(url, output_path="output"):
-    ydl_opts = {
-        'format': 'bestvideo+bestaudio/best',  # Seleciona o melhor vídeo e áudio
-        'outtmpl': f'{output_path}/%(title)s.%(ext)s',  # Nome do arquivo de saída
-        'merge_output_format': 'mp4',  # Formato final após mesclar áudio e vídeo
-        'ffmpeg_location': r'bin/',  # Substitua pelo caminho da pasta 'bin' com ffmpeg.exe
-    }
-
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([url])
-
-class main:
+class main(ctk.CTk):
     def __init__(self):
-        print(BANNER())
+        super().__init__()
+        self.title(" YoutubeDownloader ")
+        self.geometry("600x300")
+        self.resizable(False, False)
 
-        self.get_input()
+        self.draw_title()
 
-    def get_input(self):
-        while True:
-            cmd = input(" Enter a valid URL > ")
-            if not cmd:
-                print("you do not insert a valid URL...")
-                time.sleep(3)
-                return
-            
-            else:
-                download_audio(url = cmd)
-
+    def draw_title(self):
+        self.title_frame = DrawFrame(
+            self,
+            width = 100,
+            height = 100,
+            fg_color = "#ff0000"
+        )
+        self.title_frame.grid(row = 0, column = 0)
 
 if __name__ == '__main__':
     try:
-        main()
+        app = main()
+        app.mainloop()
     except KeyboardInterrupt:
         print("exiting...")
+        sys.exit()
